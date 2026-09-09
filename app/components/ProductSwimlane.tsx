@@ -19,13 +19,9 @@ export function ProductSwimlane({
 }: ProductSwimlaneProps) {
   return (
     <Section heading={title} padding="y" {...props}>
-      <div className="swimlane hiddenScroll md:pb-8 md:scroll-px-8 lg:scroll-px-12 md:px-8 lg:px-12">
-        {products.nodes.map((product) => (
-          <ProductCard
-            product={product}
-            key={product.id}
-            className="snap-start w-80"
-          />
+      <div className="product-grid grid grid-cols-2 px-6 md:grid-cols-3 md:px-8 lg:grid-cols-4 lg:px-12">
+        {products.nodes.slice(0, count).map((product) => (
+          <ProductCard product={product} key={product.id} />
         ))}
       </div>
     </Section>

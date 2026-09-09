@@ -38,7 +38,14 @@ export function Grid({
     col: 'grid-flow-col',
   };
 
-  const styles = clsx(flows[flow], gaps[gap], layouts[layout], className);
+  const styles = clsx(
+    flows[flow],
+    gaps[gap],
+    layouts[layout],
+    (layout === 'products' || props['data-test'] === 'product-grid') &&
+      'product-grid',
+    className,
+  );
 
   return <Component {...props} className={styles} />;
 }

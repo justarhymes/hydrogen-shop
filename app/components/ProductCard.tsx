@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
+import {flattenConnection, Image, Money} from '@shopify/hydrogen';
 import type {MoneyV2, Product} from '@shopify/hydrogen/storefront-api-types';
 
 import type {ProductCardFragment} from 'storefrontapi.generated';
@@ -37,8 +37,13 @@ export function ProductCard({
   if (!firstVariant) return null;
   const {image, price, compareAtPrice} = firstVariant;
 
-  if (label) {
-    cardLabel = label;
+  const discounted = isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2);
+  const alternateImage = product?.images?.nodes.find(
+    (candidate) => candidate.url !== image?.url,
+  );
+
+  if (label?.trim()) {
+    cardLabel = label.trim();
   } else if (isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2)) {
     cardLabel = 'Sale';
   } else if (isNewArrival(product.publishedAt)) {
@@ -46,17 +51,17 @@ export function ProductCard({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="product-card flex min-w-0 flex-col gap-2">
       <Link
         onClick={onClick}
         to={`/products/${product.handle}`}
         prefetch="viewport"
       >
-        <div className={clsx('grid gap-4', className)}>
-          <div className="card-image aspect-[4/5] bg-primary/5">
+        <div className={clsx('product-card-content', className)}>
+          <div className="product-card-image aspect-[4/5]">
             {image && (
               <Image
-                className="object-cover w-full fadeIn"
+                className="product-card-primary"
                 sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
                 aspectRatio="4/5"
                 data={image}
@@ -64,31 +69,38 @@ export function ProductCard({
                 loading={loading}
               />
             )}
-            <Text
-              as="label"
-              size="fine"
-              className="absolute top-0 right-0 m-4 text-right text-notice"
-            >
-              {cardLabel}
-            </Text>
+            {image && alternateImage && (
+              <Image
+                className="product-card-alternate"
+                sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
+                aspectRatio="4/5"
+                data={alternateImage}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
+            )}
+            {cardLabel && (
+              <span className="product-card-label">{cardLabel}</span>
+            )}
           </div>
-          <div className="grid gap-1">
-            <Text
-              className="w-full overflow-hidden whitespace-nowrap text-ellipsis "
-              as="h3"
-            >
-              {product.title}
-            </Text>
-            <div className="flex gap-4">
-              <Text className="flex gap-4">
-                <Money withoutTrailingZeros data={price!} />
-                {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
-                  <CompareAtPrice
-                    className={'opacity-50'}
-                    data={compareAtPrice as MoneyV2}
-                  />
+          <div className="product-card-details">
+            <h3 className="product-card-title">{product.title}</h3>
+            <div className="product-card-prices">
+              <Money
+                className={clsx(
+                  'product-card-price',
+                  discounted && 'text-secondary',
                 )}
-              </Text>
+                withoutTrailingZeros
+                data={price!}
+              />
+              {discounted && (
+                <s className="product-card-compare text-info">
+                  <span className="sr-only">Original price: </span>
+                  <Money withoutTrailingZeros data={compareAtPrice!} />
+                </s>
+              )}
             </div>
           </div>
         </div>
@@ -117,25 +129,5 @@ export function ProductCard({
         </Button>
       )}
     </div>
-  );
-}
-
-function CompareAtPrice({
-  data,
-  className,
-}: {
-  data: MoneyV2;
-  className?: string;
-}) {
-  const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
-    useMoney(data);
-
-  const styles = clsx('strike', className);
-
-  return (
-    <span className={styles}>
-      {currencyNarrowSymbol}
-      {withoutTrailingZerosAndCurrency}
-    </span>
   );
 }

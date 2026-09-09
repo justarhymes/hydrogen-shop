@@ -37,6 +37,7 @@ declare module '@shopify/remix-oxygen' {
    * Declare local additions to the Remix loader context.
    */
   export interface AppLoadContext {
+    cache: Cache;
     waitUntil: ExecutionContext['waitUntil'];
     session: AppSession;
     storefront: Storefront;

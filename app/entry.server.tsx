@@ -22,7 +22,19 @@ export default async function handleRequest(
       'https://shopify.com',
       'https://www.google-analytics.com',
       'https://www.googletagmanager.com',
-      ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:*'] : []),
+      ...(process.env.NODE_ENV !== 'production'
+        ? ['http://localhost:*', 'http://127.0.0.1:*']
+        : []),
+    ],
+    imgSrc: [
+      "'self'",
+      'data:',
+      'https://cdn.shopify.com',
+      'https://shop.app',
+      'https://*.myshopify.com',
+      'https://*.shopify.com',
+      'https://tile.openstreetmap.org',
+      'https://*.tile.openstreetmap.org',
     ],
   });
 

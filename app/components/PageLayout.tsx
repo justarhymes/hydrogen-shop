@@ -1,4 +1,4 @@
-import {useParams, Form, Await, useRouteLoaderData} from '@remix-run/react';
+import {Await, useRouteLoaderData} from '@remix-run/react';
 import useWindowScroll from 'react-use/esm/useWindowScroll';
 import {Disclosure} from '@headlessui/react';
 import {Suspense, useEffect, useMemo} from 'react';
@@ -9,7 +9,7 @@ import {Text, Heading, Section} from '~/components/Text';
 import {Link} from '~/components/Link';
 import {Cart} from '~/components/Cart';
 import {CartLoading} from '~/components/CartLoading';
-import {Input} from '~/components/Input';
+import {SearchForm} from '~/components/SearchForm';
 import {Drawer, useDrawer} from '~/components/Drawer';
 import {CountrySelector} from '~/components/CountrySelector';
 import {
@@ -182,8 +182,6 @@ function MobileHeader({
 }) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
 
-  const params = useParams();
-
   return (
     <header
       role="banner"
@@ -200,29 +198,12 @@ function MobileHeader({
         >
           <IconMenu />
         </button>
-        <Form
-          method="get"
-          action={params.locale ? `/${params.locale}/search` : '/search'}
-          className="items-center gap-2 sm:flex"
-        >
-          <button
-            type="submit"
-            className="relative flex items-center justify-center w-8 h-8"
-          >
-            <IconSearch />
-          </button>
-          <Input
-            className={
-              isHome
-                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
-                : 'focus:border-primary/20'
-            }
-            type="search"
-            variant="minisearch"
-            placeholder="Search"
-            name="q"
-          />
-        </Form>
+        <div className="hidden md:block">
+          <SearchForm compact />
+        </div>
+        <Link to="/search" aria-label="Search the shop" className="md:hidden">
+          <IconSearch />
+        </Link>
       </div>
 
       <Link
@@ -256,7 +237,6 @@ function DesktopHeader({
   menu?: EnhancedMenu;
   title: string;
 }) {
-  const params = useParams();
   const {y} = useWindowScroll();
   return (
     <header
@@ -291,29 +271,12 @@ function DesktopHeader({
         </nav>
       </div>
       <div className="flex items-center gap-1">
-        <Form
-          method="get"
-          action={params.locale ? `/${params.locale}/search` : '/search'}
-          className="flex items-center gap-2"
-        >
-          <Input
-            className={
-              isHome
-                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
-                : 'focus:border-primary/20'
-            }
-            type="search"
-            variant="minisearch"
-            placeholder="Search"
-            name="q"
-          />
-          <button
-            type="submit"
-            className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
-          >
-            <IconSearch />
-          </button>
-        </Form>
+        <div className="hidden md:block">
+          <SearchForm compact />
+        </div>
+        <Link to="/search" aria-label="Search the shop" className="md:hidden">
+          <IconSearch />
+        </Link>
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
         <CartCount isHome={isHome} openCart={openCart} />
       </div>

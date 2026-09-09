@@ -22,7 +22,7 @@ Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dov
 
 **Requirements:**
 
-- Node.js version 18.0.0 or higher
+- Node.js version 20.0.0 or higher
 
 ```bash
 npm create @shopify/hydrogen@latest -- --template demo-store
@@ -56,3 +56,13 @@ npm run dev
 1. Edit `Callback URI(s)` to include `https://<your-ngrok-domain>.app/account/authorize`
 1. Edit `Javascript origin(s)` to include your public domain `https://<your-ngrok-domain>.app` or keep it blank
 1. Edit `Logout URI` to include your public domain `https://<your-ngrok-domain>.app` or keep it blank
+
+## Resort tools
+
+The storefront is complemented by `/resorts`, `/resorts/:resortHandle`, and `/events`. Resort pages provide modeled weather, directory maps, official report and webcam links, and a regional avalanche adapter for Park City.
+
+See [feature setup and provider documentation](docs/ski-features.md) and [completion status and provider dependencies](docs/resort-status.md).
+
+## Shop search
+
+Product suggestions, journal search, sample-event search, and theme configuration are documented in [shop-search.md](docs/shop-search.md).
